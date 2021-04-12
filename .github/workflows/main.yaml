@@ -21,27 +21,29 @@ jobs:
         with:
           version: v3.2.1
 
-      - name: Install python
-        id: Install_python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-
-      - name: Set up chart-testing
-        id: Set_up_chart_testing
-        uses: helm/chart-testing-action@v2.0.1
-
-      - name: Run chart-testing (list-changed)
-        id: list-changed
-        run: |
-          changed=$(ct list-changed)
-          if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
-          fi
-
-      - name: Run chart-testing (lint)
-        id: lint
-        run: ct lint
+#      - name: Install python
+#        id: Install_python
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.7
+#
+#      - name: Set up chart-testing
+#        id: Set_up_chart_testing
+#        uses: helm/chart-testing-action@v2.0.1
+#        with:
+#          version: v3.3.0
+#
+#      - name: Run chart-testing (list-changed)
+#        id: list-changed
+#        run: |
+#          changed=$(ct list-changed)
+#          if [[ -n "$changed" ]]; then
+#            echo "::set-output name=changed::true"
+#          fi
+#
+#      - name: Run chart-testing (lint)
+#        id: lint
+#        run: ct lint
 
       - name: Create kind cluster
         id: Create_kind_cluster
@@ -52,12 +54,27 @@ jobs:
           node_image: kindest/node:v1.19.7
           cluster_name: chart-testing
           wait: 60s
-        if: steps.list-changed.outputs.changed == 'true'
+#        if: steps.list-changed.outputs.changed == 'true'
 
+#      - name: Run chart-testing (install)
+#        id: ct_install
+#        run: ct install
 
-      - name: Run chart-testing (install)
-        id: ct_install
-        run: ct install
+      - name: helm install chart
+        id: helm_install
+          command: |
+            helm upgrade --install static --namespace=default . -f ./values.yaml
+
+      - name: Sleep for 30 seconds
+        id: sleep
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
+      - name: Get pods
+        id: get_pods
+          command: |
+            kubectl get po -n default
 
       - uses: act10ns/slack@v1
         env:
