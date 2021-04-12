@@ -1,4 +1,4 @@
-# static helm chart
+# Static Site Helm Chart
 
 A helm chart for testing. Deploys a static site running in NGINX. Uses a custom image that is found in [Celestial-Industries/nginx](https://github.com/Celestial-Industries/nginx).
 
