@@ -62,8 +62,8 @@ jobs:
 
       - name: helm install chart
         id: helm_install
-        command: |
-            helm upgrade --install static --namespace=default . -f ./values.yaml
+        run: |
+          helm upgrade --install static --namespace=default . -f ./values.yaml
 
       - name: Sleep for 30 seconds
         id: sleep
@@ -73,8 +73,8 @@ jobs:
 
       - name: Get pods
         id: get_pods
-        command: |
-            kubectl get po -n default
+        run: |
+          kubectl get po -n default
 
       - uses: act10ns/slack@v1
         env:
