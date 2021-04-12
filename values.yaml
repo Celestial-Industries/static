@@ -78,7 +78,7 @@ deploymentStrategy:
    maxUnavailable: "50%"
 
 readinessProbe:
-  initialDelaySeconds: 15
+  initialDelaySeconds: 10
   periodSeconds: 5
 
 # TODO startupProbe just to see how works
@@ -86,18 +86,8 @@ readinessProbe:
 livenessProbe:
   initialDelaySeconds: 40
 
-nodeSelector: {}
+nodeSelector: {"role": "node"}
 
 tolerations: []
 
-# TODO Only use locally need to have a kind config that has nodes
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-          - key: kubernetes.io/hostname
-            operator: In
-            values:
-            - node-1
-            - node-2
+affinity: {}

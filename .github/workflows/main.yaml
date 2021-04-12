@@ -60,21 +60,30 @@ jobs:
 #        id: ct_install
 #        run: ct install
 
+      - name: label nodes
+        id: label_nodes
+        run: |
+          kubectl label nodes chart-testing-worker chart-testing-worker2 role=node
+
+      - name: check labels
+        id: check_labels
+        run: |
+          kubectl get nodes --show-labels
+
       - name: helm install chart
         id: helm_install
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml
 
-      - name: Sleep for 30 seconds
-        id: sleep
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '30s'
+      - name: deployment check rollout
+        id: check_rollout
+        run: |
+          kubectl rollout status deployment/static
 
       - name: Get pods
         id: get_pods
         run: |
-          kubectl get po -n default
+          kubectl get po -n default -o wide
 
       - uses: act10ns/slack@v1
         env:
