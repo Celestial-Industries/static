@@ -60,10 +60,14 @@ jobs:
 #        id: ct_install
 #        run: ct install
 
+      - name: Kind check version
+        run: |
+          kind --version
+
       - name: label nodes
         id: label_nodes
         run: |
-          kubectl label nodes kind-worker kind-worker2 role=node
+          kubectl label nodes chart-testing-worker chart-testing-worker2 role=node
 
       - name: check labels
         id: check_labels
