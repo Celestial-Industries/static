@@ -69,7 +69,7 @@ jobs:
         run: |
           kubectl label nodes chart-testing-worker chart-testing-worker2 role=node
 
-      - name: Check mode labels
+      - name: Check node labels
         id: check_labels
         run: |
           kubectl get nodes --show-labels
