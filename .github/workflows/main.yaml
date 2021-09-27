@@ -49,7 +49,7 @@ jobs:
         id: Create_kind_cluster
         uses: helm/kind-action@v1.1.0
         with:
-          version: v0.8.1
+          version: v0.11.1
           config: ./kind/kind.config
           node_image: kindest/node:v1.19.7
           cluster_name: chart-testing
@@ -64,22 +64,22 @@ jobs:
         run: |
           kind --version
 
-      - name: label nodes
+      - name: Label nodes
         id: label_nodes
         run: |
           kubectl label nodes chart-testing-worker chart-testing-worker2 role=node
 
-      - name: check labels
+      - name: Check mode labels
         id: check_labels
         run: |
           kubectl get nodes --show-labels
 
-      - name: helm install chart
+      - name: Helm install chart
         id: helm_install
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml
 
-      - name: deployment check rollout
+      - name: Deployment check rollout
         id: check_rollout
         run: |
           kubectl rollout status deployment/static
