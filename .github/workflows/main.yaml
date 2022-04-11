@@ -17,7 +17,7 @@ jobs:
 
       - name: Set up Helm
         id: Set_up_Helm
-        uses: azure/setup-helm@v2.0
+        uses: azure/setup-helm@v2.1
         with:
           version: v3.2.1
 
