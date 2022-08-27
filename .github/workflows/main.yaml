@@ -51,7 +51,7 @@ jobs:
         with:
           version: v0.14.0
           config: ./kind/kind.config
-          #node_image: kindest/node:v1.21.0
+          node_image: kindest/node:v1.20.0
           cluster_name: chart-testing
           wait: 60s
 #        if: steps.list-changed.outputs.changed == 'true'
