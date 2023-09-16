@@ -77,7 +77,7 @@ jobs:
       - name: Helm install chart
         id: helm_install
         run: |
-          helm upgrade --install static --namespace=default . -f ./values.yaml
+          helm upgrade --install static --namespace=default . -f ./values.yaml --set autoscaling.enabled=false --set replicaCount=4
 
       - name: Deployment check rollout
         id: check_rollout
