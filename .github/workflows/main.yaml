@@ -73,13 +73,23 @@ jobs:
         run: |
           kubectl get nodes --show-labels
 
-      - name: Create Image Pull Secret
+      - name: Login to GHCR
         run: |
-            kubectl create secret docker-registry ghcr-secret \
-              --docker-server=ghcr.io \
-              --docker-username=${{ github.actor }} \
-              --docker-password=${{ secrets.GITHUB_TOKEN }} \
-              --docker-email=${{ github.actor }}@users.noreply.github.com
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Create registry secret from Docker config
+        run: |
+            kubectl create secret generic ghcr-secret \
+              --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+              --type=kubernetes.io/dockerconfigjson            
+
+#      - name: Create Image Pull Secret
+#        run: |
+#            kubectl create secret docker-registry ghcr-secret \
+#              --docker-server=ghcr.io \
+#              --docker-username=${{ env.GHRO }} \
+#              --docker-password=${{ secrets.GITHUB_TOKEN }} \
+#              --docker-email=${{ github.actor }}@users.noreply.github.com
 
       - name: Patch Service Account
         run: |
@@ -89,19 +99,6 @@ jobs:
         id: helm_install
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml --set autoscaling.enabled=false --set replicaCount=4
-
-      - name: Debug Pods
-        run: |
-          kubectl get pods -n default
-          kubectl describe pods -n default
-
-      - name: Watch pod events
-        run: |
-          kubectl get events --watch &
-          sleep 15
-          kubectl get pods
-          sleep 15
-          kubectl describe pods | grep -A 10 Events:
 
       - name: Deployment check rollout
         id: check_rollout
