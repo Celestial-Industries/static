@@ -6,17 +6,11 @@ on:
       - main
   pull_request:
 
-env:
-  REGISTRY: ghcr.io
-
 jobs:
   lint-test:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
+      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -105,6 +99,12 @@ jobs:
         id: helm_install
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml --set autoscaling.enabled=false --set replicaCount=4
+
+      - name: debug
+        run: |
+          kubectl get po -n default -o wide
+          kubectl get events --sort-by='.lastTimestamp' | grep static
+          kubectl describe pods | grep -A 10 Events
 
       - name: Deployment check rollout
         id: check_rollout
