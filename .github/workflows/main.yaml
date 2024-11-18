@@ -10,7 +10,7 @@ jobs:
   lint-test:
     runs-on: ubuntu-latest
     permissions:
-      packages: read
+      packages: write
       contents: read
       attestations: write
       id-token: write
