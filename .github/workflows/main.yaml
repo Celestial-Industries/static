@@ -95,6 +95,14 @@ jobs:
           kubectl get pods -n default
           kubectl describe pods -n default
 
+      - name: Watch pod events
+        run: |
+          kubectl get events --watch &
+          sleep 15
+          kubectl get pods
+          sleep 15
+          kubectl describe pods | grep -A 10 Events:
+
       - name: Deployment check rollout
         id: check_rollout
         run: |
