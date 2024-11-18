@@ -93,8 +93,6 @@ jobs:
 
       - name: Debug pull
         run: |
-          docker pull ghcr.io/celestial-industries/nginx/gary-nginx
-          docker image ls
           kubectl get pods -n default
           kubectl describe pods -n default
           kubectl get events --sort-by='.lastTimestamp'
