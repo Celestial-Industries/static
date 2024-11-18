@@ -19,7 +19,7 @@ jobs:
         id: Set_up_Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.2.1
+          version: 'latest'
 
 #      - name: Install python
 #        id: Install_python
