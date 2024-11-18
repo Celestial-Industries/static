@@ -91,10 +91,20 @@ jobs:
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml --set autoscaling.enabled=false --set replicaCount=4
 
+      - name: Debug pull
+        run: |
+          docker pull ghcr.io/celestial-industries/nginx/gary-nginx
+          docker image ls
+          kubectl get pods -n default
+          kubectl describe pods -n default
+          kubectl get events --sort-by='.lastTimestamp'
+          kubectl get secret ghcr-secret -o yaml
+          kubectl get serviceaccount default -o yaml
+
       - name: Deployment check rollout
         id: check_rollout
         run: |
-          kubectl rollout status deployment/static --timeout=120s
+          kubectl rollout status deployment/static --timeout=180s
 
       - name: Get pods
         id: get_pods
