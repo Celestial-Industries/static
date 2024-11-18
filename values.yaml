@@ -5,12 +5,12 @@
 replicaCount: 3 # If autoscaling set this will not be exact as offloading to autoscaler
 
 image:
-  repository: ghcr.io/celestial-industries/gary-nginx
+  repository: ghcr.io/celestial-industries/nginx/gary-nginx
   tag: "latest"
   pullPolicy: Always
 
 imagePullSecrets:
-  - name: regcred
+  - name: ghcr-secret
 
 nameOverride: "static"
 fullnameOverride: "static"
