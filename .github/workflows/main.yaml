@@ -90,13 +90,10 @@ jobs:
         run: |
           helm upgrade --install static --namespace=default . -f ./values.yaml --set autoscaling.enabled=false --set replicaCount=4
 
-      - name: Debug pull
+      - name: Debug Pods
         run: |
           kubectl get pods -n default
           kubectl describe pods -n default
-          kubectl get events --sort-by='.lastTimestamp'
-          kubectl get secret ghcr-secret -o yaml
-          kubectl get serviceaccount default -o yaml
 
       - name: Deployment check rollout
         id: check_rollout
