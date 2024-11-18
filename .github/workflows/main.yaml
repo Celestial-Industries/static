@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
@@ -86,12 +89,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create registry secret from Docker config
-        run: |
-            kubectl create secret generic ghcr-secret \
-              --from-file=.dockerconfigjson=$HOME/.docker/config.json \
-              --type=kubernetes.io/dockerconfigjson            
-
 #      - name: Create Image Pull Secret
 #        run: |
 #            kubectl create secret docker-registry ghcr-secret \
@@ -100,9 +97,9 @@ jobs:
 #              --docker-password=${{ secrets.GITHUB_TOKEN }} \
 #              --docker-email=${{ github.actor }}@users.noreply.github.com
 
-      - name: Patch Service Account
-        run: |
-            kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}'
+#      - name: Patch Service Account
+#        run: |
+#            kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}'
 
       - name: Helm install chart
         id: helm_install
