@@ -54,15 +54,14 @@ jobs:
           #node_image: kindest/node:v1.20.0
           cluster_name: chart-testing
           wait: 60s
-#        if: steps.list-changed.outputs.changed == 'true'
-
-#      - name: Run chart-testing (install)
-#        id: ct_install
-#        run: ct install
 
       - name: Kind check version
         run: |
           kind --version
+
+      - name: Wait for nodes to be ready
+        run: |
+            kubectl wait --for=condition=ready nodes --all --timeout=300s
 
       - name: Label nodes
         id: label_nodes
