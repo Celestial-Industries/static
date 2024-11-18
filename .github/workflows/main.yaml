@@ -94,9 +94,15 @@ jobs:
 #              --docker-password=${{ secrets.GITHUB_TOKEN }} \
 #              --docker-email=${{ github.actor }}@users.noreply.github.com
 
-#      - name: Patch Service Account
-#        run: |
-#            kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}'
+      - name: Create registry secret from Docker login
+        run: |
+          kubectl create secret generic ghcr-secret \
+            --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+            --type=kubernetes.io/dockerconfigjson
+
+      - name: Patch Service Account
+        run: |
+            kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "ghcr-secret"}]}'
 
       - name: Helm install chart
         id: helm_install
