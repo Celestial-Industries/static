@@ -77,13 +77,13 @@ jobs:
         run: |
           kubectl get nodes --show-labels
 
-#      - name: Create Image Pull Secret
-#        run: |
-#            kubectl create secret docker-registry ghcr-secret \
-#              --docker-server=${{ env.REGISTRY }} \
-#              --docker-username=${{ github.actor }} \
-#              --docker-password=${{ secrets.GITHUB_TOKEN }} \
-#              --docker-email=${{ github.actor }}@users.noreply.github.com
+      - name: Create Image Pull Secret
+        run: |
+            kubectl create secret docker-registry ghcr-secret \
+              --docker-server=${{ env.REGISTRY }} \
+              --docker-username=${{ github.actor }} \
+              --docker-password=${{ secrets.GITHUB_TOKEN }} \
+              --docker-email=${{ github.actor }}@users.noreply.github.com
 
       - name: Helm install chart
         id: helm_install
