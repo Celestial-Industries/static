@@ -1,4 +1,4 @@
-name: Lint and Test Charts
+name: Lint & Test Chart
 
 on:
   push:
@@ -6,9 +6,14 @@ on:
       - main
   pull_request:
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +24,7 @@ jobs:
         id: Set_up_Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.2.1
+          version: 'latest'
 
 #      - name: Install python
 #        id: Install_python
@@ -49,20 +54,18 @@ jobs:
         id: Create_kind_cluster
         uses: helm/kind-action@v1.10.0
         with:
-          version: v0.11.0
+          version: v0.25.0
           config: ./kind/kind.config
-          #node_image: kindest/node:v1.20.0
           cluster_name: chart-testing
           wait: 60s
-#        if: steps.list-changed.outputs.changed == 'true'
-
-#      - name: Run chart-testing (install)
-#        id: ct_install
-#        run: ct install
 
       - name: Kind check version
         run: |
           kind --version
+
+      - name: Wait for nodes to be ready
+        run: |
+            kubectl wait --for=condition=ready nodes --all --timeout=300s
 
       - name: Label nodes
         id: label_nodes
@@ -74,6 +77,17 @@ jobs:
         run: |
           kubectl get nodes --show-labels
 
+      # To allow this to work need to add this repo to the package permissions 
+      # See https://github.com/orgs/community/discussions/46641#discussioncomment-6242949
+      # And https://github.com/orgs/Celestial-Industries/packages/container/nginx%2Fgary-nginx/settings
+      - name: Create Image Pull Secret
+        run: |
+            kubectl create secret docker-registry ghcr-secret \
+              --docker-server=${{ env.REGISTRY }} \
+              --docker-username=${{ github.actor }} \
+              --docker-password=${{ secrets.GITHUB_TOKEN }} \
+              --docker-email=${{ github.actor }}@users.noreply.github.com
+
       - name: Helm install chart
         id: helm_install
         run: |
@@ -82,7 +96,7 @@ jobs:
       - name: Deployment check rollout
         id: check_rollout
         run: |
-          kubectl rollout status deployment/static
+          kubectl rollout status deployment/static --timeout=180s
 
       - name: Get pods
         id: get_pods
