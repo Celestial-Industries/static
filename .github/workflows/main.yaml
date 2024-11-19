@@ -1,4 +1,4 @@
-name: Lint and Test Charts
+name: Lint & Test Chart
 
 on:
   push:
@@ -77,6 +77,9 @@ jobs:
         run: |
           kubectl get nodes --show-labels
 
+      # To allow this to work need to add this repo to the package permissions 
+      # See https://github.com/orgs/community/discussions/46641#discussioncomment-6242949
+      # And https://github.com/orgs/Celestial-Industries/packages/container/nginx%2Fgary-nginx/settings
       - name: Create Image Pull Secret
         run: |
             kubectl create secret docker-registry ghcr-secret \
