@@ -112,7 +112,7 @@ jobs:
 
       - name: try again    
         run: |
-          kubectl create secret docker-registry ghcr-secret --docker-server='ghcr.io' --docker-username='mcdermg'  --docker-password=${{ secret.TOKEN_GHCR }}  --docker-email='mcdermott.gearoid@gmail.com'
+          kubectl create secret docker-registry ghcr-secret --docker-server='ghcr.io' --docker-username='mcdermg'  --docker-password=${{ secrets.TOKEN_GHCR }}  --docker-email='mcdermott.gearoid@gmail.com'
 
       - name: Patch Service Account
         run: |
