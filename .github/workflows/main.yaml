@@ -104,11 +104,15 @@ jobs:
 #              --docker-password=${{ secrets.GITHUB_TOKEN }} \
 #              --docker-email=${{ github.actor }}@users.noreply.github.com
 
-      - name: Create registry secret from Docker login
+#      - name: Create registry secret from Docker login
+#        run: |
+#          kubectl create secret generic ghcr-secret \
+#            --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+#            --type=kubernetes.io/dockerconfigjson
+
+      - name: try again    
         run: |
-          kubectl create secret generic ghcr-secret \
-            --from-file=.dockerconfigjson=$HOME/.docker/config.json \
-            --type=kubernetes.io/dockerconfigjson
+          kubectl create secret docker-registry ghcr-secret --docker-server='ghcr.io' --docker-username='mcdermg'  --docker-password=${{ secret.TOKEN_GHCR }}  --docker-email='mcdermott.gearoid@gmail.com'
 
       - name: Patch Service Account
         run: |
