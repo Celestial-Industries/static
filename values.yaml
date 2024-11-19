@@ -9,8 +9,8 @@ image:
   tag: "latest"
   pullPolicy: Always
 
-imagePullSecrets:
-  - name: ghcr-secret
+#imagePullSecrets:
+#  - name: ghcr-secret
 
 nameOverride: "static"
 fullnameOverride: "static"
