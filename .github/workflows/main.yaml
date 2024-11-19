@@ -110,9 +110,9 @@ jobs:
 #            --from-file=.dockerconfigjson=$HOME/.docker/config.json \
 #            --type=kubernetes.io/dockerconfigjson
 
-      - name: try again    
+      - name: Create registry secret from GH user PAT  
         run: |
-          kubectl create secret docker-registry ghcr-secret --docker-server='ghcr.io' --docker-username='mcdermg'  --docker-password=${{ secrets.TOKEN_GHCR }}  --docker-email='mcdermott.gearoid@gmail.com'
+          kubectl create secret docker-registry ghcr-secret --docker-server='ghcr.io' --docker-username='mcdermg'  --docker-password=${{ secrets.GITHUB_TOKEN }}  --docker-email='mcdermott.gearoid@gmail.com'
 
       - name: Patch Service Account
         run: |
